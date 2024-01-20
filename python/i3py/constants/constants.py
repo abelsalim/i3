@@ -3,7 +3,10 @@ from types import SimpleNamespace
 i3 = SimpleNamespace()
 monitor = SimpleNamespace()
 
+
+# Relacionado a utilização do i3
 i3.restart = 'i3-msg restart'
+
 
 # Relacionado a utilização do xrandr
 monitor.connected = "xrandr --verbose|grep connected|awk '{print $1}'"

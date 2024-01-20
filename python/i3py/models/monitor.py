@@ -9,7 +9,7 @@ class Monitor:
     def __init__(self):
         self._monitors_active = SimpleNamespace()
         self._monitors_connected = SimpleNamespace()
-        self._xrandr_exec = False
+        self._xrandr_exec = ''
         self.atributos = [
             self._monitors_active,
             self._monitors_connected
@@ -19,7 +19,6 @@ class Monitor:
     def restar_i3(self):
         no_stdout_run(i3.restart)
 
-    @property
     def search_dict_primary(self):
         primary = next(
             filter(
@@ -76,9 +75,20 @@ class Monitor:
         # busca monitor primario
         self.search_dict_primary
 
-        for dicionario in self._monitors_connected.monitors:
-            # Continue se primary é True
-            if dicionario.get('primary'):
+        for index, dicionario in enumerate(self._monitors_connected.monitors):
+            # Entra se for o primeiro índice
+            
+            if not index:
+                # Nesse ponto estamos pegando o primeiro monitor visando a
+                # usabilidade em notbook, pois o monitor embutido não
+                # necessariamente é o primário, mas sempre será é o primeiro
+                # listado pelo xrandr.
+                # Nota: O padão eDP-1 não é levado em consideração pois
+                # adaptadores usb-c ficam contém a mesma nomenclatura.
+                self._xrandr_exec += monitor.sync_main_monitors.format(
+                    dicionario.get('monitor'),
+                    dicionario.get('resolution')
+                )
                 continue
 
             # Adicionando os demais monitores na string principal
