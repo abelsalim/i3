@@ -65,19 +65,44 @@ class Monitor:
             # Dicionario dos monitores e resoluções
             atributo.monitors = self.get_resolution(monitors, primary)
 
+    def disable(self):
+        self.search_monitors
+        self._xrandr_exec = ''
+
+        for index, dicionario in enumerate(self._monitors_connected.monitors):
+            # Entra se for o primeiro índice
+            if not index:
+                # Nesse ponto estamos pegando o primeiro monitor visando a
+                # usabilidade em notbook, pois o monitor embutido não
+                # necessariamente é o primário, mas sempre será é o primeiro
+                # listado pelo xrandr.
+                # Nota: O padão eDP-1 não é levado em consideração pois
+                # adaptadores usb-c ficam contém a mesma nomenclatura.
+                self._xrandr_exec += monitor.sync_main_monitors.format(
+                    dicionario.get('monitor'),
+                    dicionario.get('resolution')
+                )
+                continue
+
+            # Adicionando os demais monitores na string principal
+            self._xrandr_exec += monitor.disable_secondary_monitors.format(
+                dicionario.get('monitor')
+            )
+
+        # Ativa monitores e reinia i3
+        no_stdout_run(self._xrandr_exec)
+        self.restar_i3
+
     def active(self):
         self.search_monitors
+        self._xrandr_exec = ''
 
         # Sai se não houver monitor ocioso
         if self._monitors_active.number == self._monitors_connected.number:
             return
 
-        # busca monitor primario
-        self.search_dict_primary
-
         for index, dicionario in enumerate(self._monitors_connected.monitors):
             # Entra se for o primeiro índice
-            
             if not index:
                 # Nesse ponto estamos pegando o primeiro monitor visando a
                 # usabilidade em notbook, pois o monitor embutido não

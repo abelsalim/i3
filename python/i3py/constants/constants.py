@@ -22,6 +22,8 @@ monitor.sync_main_monitors = (
 monitor.sync_secondary_monitors = (
     ' --output {} --mode {} --pos 0x0 --rotate normal'
 )
+monitor.disable_secondary_monitors = ' --output {} --off'
 
+# listas relacionadas ao xrandr
 monitor.labels = ['active', 'connected']
 monitor.commands = [monitor.active, monitor.connected]
