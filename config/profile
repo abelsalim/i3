@@ -1,0 +1,5 @@
+# Exporta o path do flutter e dart
+export PATH="$PATH:/opt/flutter/bin"
+
+# Exporta pythonpath
+export PYTHONPATH=$HOME/projetos/pessoal/i3/python:$PYTHONPATH
