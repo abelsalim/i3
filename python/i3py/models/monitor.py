@@ -98,8 +98,8 @@ class Monitor:
         self._xrandr_exec = ''
 
         # Sai se não houver monitor ocioso
-        if self._monitors_active.number == self._monitors_connected.number:
-            return
+        # if self._monitors_active.number == self._monitors_connected.number:
+        #     return
 
         for index, dicionario in enumerate(self._monitors_connected.monitors):
             # Entra se for o primeiro índice
