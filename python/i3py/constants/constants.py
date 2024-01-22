@@ -16,6 +16,9 @@ monitor.active = (
 monitor.reolution = (
     "xrandr -q | grep '{}' -A1 | tail -n1 | awk '{{print $1}}'"
 )
+monitor.dimension = (
+    "xrandr|grep {}|awk '{{print $3}}'|awk -F + '{{print $2 $3}}'"
+)
 monitor.sync_main_monitors = (
     'xrandr --output {} --primary --mode {} --pos 0x768 --rotate normal'
 )
