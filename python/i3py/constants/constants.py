@@ -16,6 +16,9 @@ monitor.active = (
 monitor.reolution = (
     "xrandr -q | grep '{}' -A1 | tail -n1 | awk '{{print $1}}'"
 )
+monitor.localizacao = (
+    "xrandr -q | awk '/{}/' | awk -F '[ +]' '{{print $4 $5}}'"
+)
 monitor.dimension = (
     "xrandr|grep {}|awk '{{print $3}}'|awk -F + '{{print $2 $3}}'"
 )

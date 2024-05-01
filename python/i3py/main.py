@@ -1,16 +1,13 @@
 from i3py.models.monitor import Monitor
-from i3py.utils.funcoes import argumentos_monitor
 
 
-def main(active, disable):
+def main():
+    # Instanciando classe
     monitor = Monitor()
 
-    if active:
-        monitor.active()
-
-    elif disable:
-        monitor.disable()
+    # Executando método
+    monitor.active_disable()
 
 
 if __name__ == '__main__':
-    main(*argumentos_monitor())
+    main()
