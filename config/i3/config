@@ -1,40 +1,41 @@
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# The combination of xss-lock, nm-applet and pactl is a popular choice, so
-# they are included here as an example. Modify as you see fit.
-
-# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-# screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
+# ------------------------------------------------------------------------------
+# Variáveis de ambiente
+# ------------------------------------------------------------------------------
 
 # Tecla modificadora
 set $mod Mod4
 
-# Font default
-font pango:Droid Sans Mono 10
-
-# -----------------------------------------------------------------------------
-# Variáveis de ambiente
-# -----------------------------------------------------------------------------
-
+# Kill i3status
 set $refresh_i3status killall -SIGUSR1 i3status
 
-# -----------------------------------------------------------------------------
+# Variáveis dos workspace
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# ------------------------------------------------------------------------------
+# Configurações de ambiente
+# ------------------------------------------------------------------------------
+
+# Exportando `pythonpath`
+exec --no-startup-id export PYTHONPATH=$HOME/i3/python:$PYTHONPATH
+
+# ------------------------------------------------------------------------------
 # Atalhos de teclado para o sistema
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Na sequencia aumenta volume, diminui, muta e desmuta.
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
-
-# Tecla modificado + o click do mouse para levar janela para workspace desejado
-floating_modifier $mod
 
 # fechar janela
 bindsym $mod+Shift+q kill
@@ -45,49 +46,91 @@ bindsym $mod+d exec dmenu_run -p '>' -l 3 -fn 'mono-12' -sb 'SkyBlue'
 # Start networkmanager-dmenu
 bindsym $mod+Shift+d exec networkmanager_dmenu -l 10 -fn 'mono-12' -sb 'SkyBlue'
 
-# -----------------------------------------------------------------------------
+#Ajuste de Brilho +
+bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
+
+#Ajuste de Brilho -
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+
+# ------------------------------------------------------------------------------
+# Aplicações iniciadas com o Desktop
+# ------------------------------------------------------------------------------
+
+# Font default
+font pango:Droid Sans Mono 11
+
+# Servidor de notificações
+exec_always --no-startup-id dunst
+
+# Transparencia
+exec_always picom -f
+
+# Restaurar wallpaper
+exec_always --no-startup-id source $HOME/.fehbg
+
+# ------------------------------------------------------------------------------
 # Configurações para de janela para aplicativos
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Dimensionando janelas
 for_window [class="zenity"] floating enable, resize set 800 400, move position center;
 for_window [class="TelegramDesktop"] floating enable, resize set 1200 350, move position center;
+for_window [class="Pcmanfm"] floating enable, resize set 1200 700, move position center;
+for_window [class="Pcmanfm"title="Criar nova pasta"] floating enable, resize set 500 150, move position center;
+for_window [class="Pcmanfm"title="Renomear arquivo"] floating enable, resize set 500 150, move position center;
+for_window [class="Oblogout"] floating enable;
+for_window [class="Pavucontrol"] floating enable, resize set 700 400, move position center;
+for_window [class="Blueman-manager"] floating enable, resize set 700 400, move position center;
+for_window [class="Google-chrome"title="Abrir arquivo"] floating enable, resize set 900 700, move position center;
+for_window [class="gnome-calculator"] floating enable, resize set 230 600, move position center;
+for_window [class="GParted"] floating enable, resize set 800 500, move position center;
 
-# -----------------------------------------------------------------------------
+# Comando para identificar classe: xprop|grep WM_CLASS|awk '{print $4}'
+# Comando para identificar título: xprop|grep WM_NAME|grep -v _NET_|awk -F ' = ' '{print $3}'
+
+# ------------------------------------------------------------------------------
 # Atalhos de teclado para aplicativos
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Start a terminal
 bindsym $mod+Return exec tilix
 
 # Start Firefox
-bindsym $mod+Shift+w    workspace $ws2; exec firefox;
+bindsym $mod+Shift+w workspace $ws2; exec google-chrome-stable;
 
 # Start nautilus
-bindsym $mod+Shift+p    workspace $ws3; exec nautilus;
+bindsym $mod+Shift+p workspace $ws3; exec pcmanfm;
 
 # Start telegram
-bindsym $mod+Shift+t    workspace $ws4; exec telegram-desktop;
-
-# Start code
-bindsym $mod+Shift+s    workspace $ws5; exec code;
+bindsym $mod+Shift+t workspace $ws4; exec telegram-desktop;
 
 # Start vmsalim
-bindsym $mod+Shift+Return       workspace $ws6; exec tilix -e 'ssh suporte@192.168.1.17';
+bindsym $mod+Shift+Return workspace $ws6; exec tilix -e 'ssh suporte@192.168.1.17';
+
+# Start code
+bindsym $mod+Shift+s exec code;
+
+# Start oblogout
+bindsym $mod+Shift+x exec oblogout;
+
+# Start oblogout
+bindsym $mod+p exec pavucontrol;
+
+# Screenshot
+bindsym --release Print exec flameshot gui;
+
+# Conectar monitor secundário
+bindsym $mod+a exec python /home/salim/i3/python/i3py/main.py -a;
+
+# Desconectar monitor secundário
+bindsym $mod+z exec python /home/salim/i3/python/i3py/main.py -d;
 
 # Bloqueio de tela
 # bindsym $mod+x exec lock --blur=sigma --clock
 
-# Start oblogout
-#bindsym $mod+Shift+x	workspace $ws10; exec oblogout
-
-# Screenshot
-# bindsym --release Print exec xfce4-screenshooter
-
-
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Manipulação de janela
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Mudar o foco
 bindsym $mod+Left focus left
@@ -110,42 +153,50 @@ bindsym $mod+v split v
 # Habilita/Desabilita modo fullscreen
 bindsym $mod+f fullscreen toggle
 
-# change container layout (stacked, tabbed, toggle split)
+# Empilha as janelas
 bindsym $mod+s layout stacking
+
+# Paraleliza as janelas
 bindsym $mod+w layout tabbed
+
+# Retorna as janelas para o 'lado-a-lado'
 bindsym $mod+e layout toggle split
 
-# toggle tiling / floating
+# Alterna no modo flutuante
 bindsym $mod+Shift+space floating toggle
 
-# change focus between tiling / floating windows
+# Alterna o foco entre a janela flutuante e a janela normal
 bindsym $mod+space focus mode_toggle
 
+# Modo resize
+bindsym $mod+r mode "resize"
 
-# focus the parent container
-# bindsym $mod+Shift+a focus parent
+# Redimencionar janela no modo flutuante
+mode "resize" {
+        # Redimencionando com teclas de seta
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
 
-# focus the child container
-# bindsym $mod+Shift+d focus child
+        # retorna com mode + r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
-set $ws1 "1: "
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+# Tecla modificado + o click do mouse para levar janela para workspace desejado
+floating_modifier $mod
+
+# ------------------------------------------------------------------------------
+# Manipulação de workspace
+# ------------------------------------------------------------------------------
 
 # fixar workspace em monitores
 workspace 1 output eDP-1
 workspace 2 output HDMI-1
 
-# switch to workspace
+# Alternar workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
 bindsym $mod+3 workspace number $ws3
@@ -157,7 +208,7 @@ bindsym $mod+8 workspace number $ws8
 bindsym $mod+9 workspace number $ws9
 bindsym $mod+0 workspace number $ws10
 
-# move focused container to workspace
+# Mover janela para outro workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
 bindsym $mod+Shift+2 move container to workspace number $ws2
 bindsym $mod+Shift+3 move container to workspace number $ws3
@@ -169,42 +220,18 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+# Reiniciar configurações do i3
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
-# resize window (you can also use the mouse for that)
-mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+# Recarregar configurações do i3
+bindsym $mod+Shift+c reload
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
-
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
-}
-
+# ------------------------------------------------------------------------------
+# Manipulação barra de status
+# ------------------------------------------------------------------------------
 
 bar {
-        status_command i3blocks
-        # status_command i3status
+        status_command i3status
         position top
         colors {
                 background #16161E
@@ -217,63 +244,18 @@ bar {
         }
 }
 
-
-# CONFIGURAÇÕES DO I3 GAPS
+# ------------------------------------------------------------------------------
+# Configurações do i3 Gaps
+# ------------------------------------------------------------------------------
 
 ##i3-gaps##
-for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border pixel 2
 gaps inner 5
 gaps outer 2
 
 # cores das bordas
-
 client.focused          #ffffff #ffffff #ffffff #ffffff #ffffff
 client.focused_inactive #686666 #686666 #686666 #686666 #686666
 client.unfocused        #686666 #686666 #686666 #686666 #686666
 client.urgent           #ffffff #ffffff #ffffff #ffffff #ffffff
 client.placeholder      #ffffff #ffffff #ffffff #ffffff #ffffff
-
-
-# CONFIGURAÇÕES DO I3WM 
-
-# Modo resize
-bindsym $mod+r mode "resize"
-
-
-# CONFIGURAÇÕES DE APLICAÇÕES
-
-#Ajuste de Brilho
-bindsym XF86MonBrightnessUp   exec xbacklight -inc +10
-bindsym XF86MonBrightnessDown exec xbacklight -inc -10
-
-# bindsym $mod+b exec xbindkeys -n > /dev/null 2&1 
-
-
-# LAYOUT DE TECLADO
-# exec_always setxkbmap -layout nativo -variant abnt2
-exec_always setxkbmap br
-
-# bindsym $mod+F1 exec setxkbmap -layout nativo -variant abnt2
-# bindsym $mod+F2 exec setxkbmap -layout nativo -variant nativo
-
-
-# APLICATIVOS INICIALIZADOS COM O SISTEMA
-
-# Dunst
-exec --no-startup-id dunst
-
-# Transparencia
-exec_always picom -f
-
-# Restaurar wallpaper
-exec_always --no-startup-id source $HOME/.fehbg
-
-# Polybar
-# exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-
-# Megasync
-# exec_always --no-startup-id megasync
-
-# bindsym $mod+m exec --no-startup-id python -x /home/salim/projetos/pessoal/i3/python/i3py/main.py -a;
-exec --no-startup-id $HOME/.config/autostart/autostart.sh
-
