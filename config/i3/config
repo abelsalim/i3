@@ -68,6 +68,9 @@ exec_always picom -f
 # Restaurar wallpaper
 exec_always --no-startup-id source $HOME/.fehbg
 
+# Seta idioma no sistema
+exec_always --no-startup-id setxkbmap br
+
 # ------------------------------------------------------------------------------
 # Configurações para de janela para aplicativos
 # ------------------------------------------------------------------------------
@@ -119,11 +122,8 @@ bindsym $mod+p exec pavucontrol;
 # Screenshot
 bindsym --release Print exec flameshot gui;
 
-# Conectar monitor secundário
-bindsym $mod+a exec python /home/salim/i3/python/i3py/main.py -a;
-
-# Desconectar monitor secundário
-bindsym $mod+z exec python /home/salim/i3/python/i3py/main.py -d;
+# Conectar/Desconectar monitor secundário
+bindsym $mod+a exec python /home/salim/i3/python/i3py/main.py;
 
 # Bloqueio de tela
 # bindsym $mod+x exec lock --blur=sigma --clock
